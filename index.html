@@ -1,46 +1,82 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8">
     <title>Movie Snack Bar</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="./style.css" type="text/css" />
     <script src="script.js" defer></script>
   </head>
-  <body>
+  <body class="bg-gray-900 text-white">
     <div class="container mx-auto px-4 py-8 text-center">
       <section class="py-8">
         <h1 class="text-4xl font-bold mb-4">🎬 Movie Snack Bar</h1>
         <p class="mb-6">Click a snack to add it to your order.</p>
 
-        <div
-          id="button-group"
-          class="grid grid-cols-1 md:grid-cols-5 gap-4 max-w-5xl mx-auto"
-        >
-          <button class="button px-6 py-3 text-white" id="popcorn">
+        <div id="button-group" class="grid grid-cols-1 md:grid-cols-5 gap-4 max-w-5xl mx-auto">
+          <button class="snack-btn bg-blue-600 hover:bg-blue-700 p-4 rounded shadow" data-name="Popcorn" data-price="4.50">
             🍿 Popcorn: $4.50
           </button>
-          <button class="button px-6 py-3 text-white" id="soda">
+          <button class="snack-btn bg-blue-600 hover:bg-blue-700 p-4 rounded shadow" data-name="Soda" data-price="2.50">
             🥤 Soda: $2.50
           </button>
-          <button class="button px-6 py-3 text-white" id="candy">
+          <button class="snack-btn bg-blue-600 hover:bg-blue-700 p-4 rounded shadow" data-name="Candy" data-price="1.75">
             🍬 Candy: $1.75
           </button>
-          <button class="button px-6 py-3 text-white" id="nachos">
+          <button class="snack-btn bg-blue-600 hover:bg-blue-700 p-4 rounded shadow" data-name="Nachos" data-price="5.00">
             🧀 Nachos: $5.00
           </button>
-          <button class="button px-6 py-3 text-white" id="icecream">
+          <button class="snack-btn bg-blue-600 hover:bg-blue-700 p-4 rounded shadow" data-name="Ice Cream" data-price="3.25">
             🍦 Ice Cream: $3.25
           </button>
         </div>
       </section>
 
-      <section class="py-8">
+      <section class="py-8 bg-gray-800 rounded-lg mt-10">
         <h3 class="text-2xl font-semibold mb-4">Your Order:</h3>
-        <div id="shopping-cart"></div>
+        <ul id="shopping-cart" class="list-none p-0 mb-4 space-y-2">
+            </ul>
+        <hr class="border-gray-700 my-4 w-1/2 mx-auto">
         <h4 class="text-xl font-semibold mt-4">
-          Total: $<span id="total-span">0</span>
+          Total: $<span id="total-span">0.00</span>
         </h4>
+        <button id="clear-cart" class="mt-4 text-sm text-red-400 underline">Clear Order</button>
       </section>
     </div>
   </body>
 </html>
+2. The Logic (script.js)
+Create this file in the same folder. This script tracks the total and adds a list item every time you click.
+
+JavaScript
+
+let total = 0;
+const cartElement = document.getElementById('shopping-cart');
+const totalSpan = document.getElementById('total-span');
+const snackButtons = document.querySelectorAll('.snack-btn');
+const clearBtn = document.getElementById('clear-cart');
+
+// Function to handle clicking a snack
+snackButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        const name = button.getAttribute('data-name');
+        const price = parseFloat(button.getAttribute('data-price'));
+
+        // 1. Update Total
+        total += price;
+        totalSpan.innerText = total.toFixed(2);
+
+        // 2. Add to List
+        const listItem = document.createElement('li');
+        listItem.className = "bg-gray-700 py-2 px-4 rounded inline-block mx-1 mb-1";
+        listItem.textContent = `${name} - $${price.toFixed(2)}`;
+        cartElement.appendChild(listItem);
+    });
+});
+
+// Clear button logic
+clearBtn.addEventListener('click', () => {
+    total = 0;
+    totalSpan.innerText = "0.00";
+    cartElement.innerHTML = "";
+});
